@@ -17,13 +17,14 @@ public class Card : MonoBehaviour {
     private bool isFlipped = false; // 카드가 뒤집힌 상태인지 저장하는 변수
     private bool isFlipping = false; // 카드가 뒤집히고 있는 상태인지 저장하는 변수
 
-    void Start() {
-        
+    public int cardID;
+    
+    public void SetCardID(int id) {
+        cardID = id;
     }
 
-
-    void Update() {
-        
+    public void SetAnimalSprite(Sprite sprite) {
+        this.animalSprite = sprite; 
     }
 
     public void FlipCard() {
