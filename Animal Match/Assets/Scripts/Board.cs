@@ -16,13 +16,26 @@ public class Board : MonoBehaviour {
 
     void Start() {
         GenerateCardID();
+        ShuffleCardID();
         InitBoard();
     }
 
     void GenerateCardID() {
-        for(int i = 0; i < cardSprites.Length; i++) { // 카드 별 ID 부여
+        for (int i = 0; i < cardSprites.Length; i++) { // 카드 별 ID 부여 0, 0, 1, 1, ... 9, 9
             cardIDList.Add(i);
             cardIDList.Add(i);
+        }
+    }
+
+    void ShuffleCardID() { // 카드 랜덤으로 섞는 함수
+        int cardCount = cardIDList.Count; // cardIDList에 있는 크기를 받는 변수
+
+        // 뒤 값과 i번째 값을 서로 교환하는 반복문
+        for(int i = 0; i < cardCount; i++) { // cardIDList 크기만큼 for 반복문 처리
+            int randomIndex = Random.Range(i, cardCount); // 0~20 미만의 수를 저장하는 변수, 배열의 "위치"를 저장하는 변수
+            int temp = cardIDList[randomIndex]; // cardIDList에서 0~20 번째 랜덤한 위치에 존재하는 "값"을 임시로 저장하는 변수
+            cardIDList[randomIndex] = cardIDList[i]; // cardIDList에서 랜덤한 위치의 값을 0번째 값으로 변경
+            cardIDList[i] = temp; // 0번째 값을 temp에 저장된 값으로 변경
         }
     }
 
@@ -44,8 +57,8 @@ public class Board : MonoBehaviour {
                 GameObject cardObject = Instantiate(cardPrefab, pos, Quaternion.identity); // 오브젝트화 시키기
                 Card card = cardObject.GetComponent<Card>(); // 카드 컴포넌트 가져오기
 
-                int cardID = cardIDList[cardIndex++]; // 저장된 값을 하나씩 가져온다. 0,0,1,1,2,2,3,3, ...
-
+                int cardID = cardIDList[cardIndex++]; // 저장된 값을 하나씩 가져온다.
+                
                 card.SetCardID(cardID);
                 card.SetAnimalSprite(cardSprites[cardID]);
             }
