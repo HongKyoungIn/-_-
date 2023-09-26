@@ -13,6 +13,7 @@ public class Board : MonoBehaviour {
 
     private List<int> cardIDList = new List<int>(); // 카드 쌍을 이루도록 카드에 ID 번호를 부여하기 위한 카드ID 리스트 변수
 
+    private List<Card> cardList = new List<Card>();
 
     void Start() {
         GenerateCardID();
@@ -61,7 +62,12 @@ public class Board : MonoBehaviour {
                 
                 card.SetCardID(cardID);
                 card.SetAnimalSprite(cardSprites[cardID]);
+
+                cardList.Add(card); // 카드 리스트에 추가
             }
         }
+    }
+    public List<Card> GetCards() { // 리스트를 반환해주는 메소드
+        return cardList; // 20장의 카드를 리스트 형태로 반환.
     }
 }
