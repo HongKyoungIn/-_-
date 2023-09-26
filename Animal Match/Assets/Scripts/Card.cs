@@ -16,11 +16,16 @@ public class Card : MonoBehaviour {
 
     private bool isFlipped = false; // 카드가 뒤집힌 상태인지 저장하는 변수
     private bool isFlipping = false; // 카드가 뒤집히고 있는 상태인지 저장하는 변수
+    private bool isMatched = false;
 
     public int cardID;
     
     public void SetCardID(int id) {
         cardID = id;
+    }
+
+    public void SetMatched() {
+        isMatched = true;
     }
 
     public void SetAnimalSprite(Sprite sprite) {
@@ -53,8 +58,8 @@ public class Card : MonoBehaviour {
     }
 
     void OnMouseDown() {
-        if(isFlipping == false) { // 만약 카드가 뒤집히고 있는 상태가 아니라면
-            FlipCard(); // 카드를 뒤집는다.
+        if(!isFlipping && !isMatched && !isFlipped) { // 만약 카드가 뒤집히고 있는 상태가 아니라면
+            GameManager.instance.CardCliked(this); // 카드를 뒤집는다.
         }
     }
 }
