@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
 
@@ -9,7 +10,15 @@ public class GameManager : MonoBehaviour {
     private List<Card> allCards;
     private Card flippedCard; // 뒤집힌 카드 정보를 저장하기 위한 참조 변수
     private bool isFlipping = false;
-    
+
+    [SerializeField]
+    private Slider timeoutSlider; // 타임 슬라이더 컴포넌트
+
+    [SerializeField]
+    private float timeLimit = 60; // 제한 시간 저장하는 변수
+
+    private float currentTime; // 현재 남은시간 저장하는 변수
+
     private void Awake() {
         if(instance == null) {
             instance = this;
@@ -20,9 +29,8 @@ public class GameManager : MonoBehaviour {
         Board board = FindObjectOfType<Board>(); // 보드 객체 찾아오기
         allCards = board.GetCards(); // 게임 매니저에서 20장의 카드에 저장하고 접근하기 위한 변수
 
-        StartCoroutine("FlipAllCardsRoutine");
-
-
+        currentTime = timeLimit; // 현재 시간에 제한 시간 값 대입
+        StartCoroutine("FlipAllCardsRoutine"); // 모든 카드 뒤집는 코루틴 실행
     }
 
     IEnumerator FlipAllCardsRoutine() {
@@ -33,6 +41,18 @@ public class GameManager : MonoBehaviour {
         FlipAllCards();
         yield return new WaitForSeconds(0.5f);
         isFlipping = false;
+
+        yield return StartCoroutine("CountDownTimerRoutine"); // 타임아웃 코루틴 실행
+    }
+
+    IEnumerator CountDownTimerRoutine() {
+        while(currentTime > 0) {
+            currentTime -= Time.deltaTime; // 현재 시간에서 1초씩 감소
+            timeoutSlider.value = currentTime / timeLimit; // 남은시간에 따른 슬라이더 fill의 value값 설정
+            yield return null;
+        }
+
+        GameOver(false);
     }
     
     void FlipAllCards() { // 모든 카드 한 번 뒤집는 메소드
@@ -75,5 +95,14 @@ public class GameManager : MonoBehaviour {
 
         isFlipping = false;
         flippedCard = null;
+    }
+
+    void GameOver(bool success) {
+        if(success) {
+            Debug.Log("Great Job");
+        }
+        else {
+            Debug.Log("Game Over");
+        }
     }
 }
