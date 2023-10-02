@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour {
@@ -136,11 +137,15 @@ public class GameManager : MonoBehaviour {
                 gameOverText.SetText("Game Over");
             }
 
-            Invoke("ShowGameOverPanel", 2f);
+            Invoke("ShowGameOverPanel", 0.5f);
         }
     }
 
     void ShowGameOverPanel() {
         gameOverPanel.SetActive(true);
+    }
+
+    public void Restart() {
+        SceneManager.LoadScene("SampleScene");
     }
 }
