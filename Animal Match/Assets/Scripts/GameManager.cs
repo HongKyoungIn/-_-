@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +13,9 @@ public class GameManager : MonoBehaviour {
 
     [SerializeField]
     private Slider timeoutSlider; // 타임 슬라이더 컴포넌트
+
+    [SerializeField]
+    private TextMeshProUGUI timeoutText; // 제한 시간 텍스트를 저장
 
     [SerializeField]
     private float timeLimit = 60; // 제한 시간 저장하는 변수
@@ -30,7 +33,13 @@ public class GameManager : MonoBehaviour {
         allCards = board.GetCards(); // 게임 매니저에서 20장의 카드에 저장하고 접근하기 위한 변수
 
         currentTime = timeLimit; // 현재 시간에 제한 시간 값 대입
+        SetCurrentTimeText();
         StartCoroutine("FlipAllCardsRoutine"); // 모든 카드 뒤집는 코루틴 실행
+    }
+
+    void SetCurrentTimeText() {
+        int timeSec = Mathf.CeilToInt(currentTime); // 올림을 이용하여 소수를 정수로 표현
+        timeoutText.SetText(timeSec.ToString());
     }
 
     IEnumerator FlipAllCardsRoutine() {
@@ -49,6 +58,7 @@ public class GameManager : MonoBehaviour {
         while(currentTime > 0) {
             currentTime -= Time.deltaTime; // 현재 시간에서 1초씩 감소
             timeoutSlider.value = currentTime / timeLimit; // 남은시간에 따른 슬라이더 fill의 value값 설정
+            SetCurrentTimeText(); // 시간 텍스트 감소 시키기
             yield return null;
         }
 
