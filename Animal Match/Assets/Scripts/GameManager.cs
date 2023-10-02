@@ -20,7 +20,17 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     private float timeLimit = 60; // 제한 시간 저장하는 변수
 
+    [SerializeField]
+    private GameObject gameOverPanel;
+
+    [SerializeField]
+    private TextMeshProUGUI gameOverText;
+
+    private bool isGameOver = false;
+
     private float currentTime; // 현재 남은시간 저장하는 변수
+    private int totalMatches = 10; // 총 찾는 매치 쌍 값, 게임 종료 조건
+    private int matchesFound = 0; // 찾은 매치 쌍
 
     private void Awake() {
         if(instance == null) {
@@ -72,7 +82,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public void CardCliked(Card card) {
-        if(isFlipping) {
+        if(isFlipping || isGameOver) {
             return;
         }
 
@@ -93,6 +103,11 @@ public class GameManager : MonoBehaviour {
         if(card1.cardID == card2.cardID) {
             card1.SetMatched();
             card2.SetMatched();
+            matchesFound++;
+
+            if(matchesFound == totalMatches) {
+                GameOver(true);
+            }
         }
         else {
             yield return new WaitForSeconds(1f);
@@ -108,11 +123,24 @@ public class GameManager : MonoBehaviour {
     }
 
     void GameOver(bool success) {
-        if(success) {
-            Debug.Log("Great Job");
+
+        if(!isGameOver) {
+            isGameOver = true;
+
+            StopCoroutine("CountDownTimerRoutine");
+
+            if (success) {
+                gameOverText.SetText("Great Job");
+            }
+            else {
+                gameOverText.SetText("Game Over");
+            }
+
+            Invoke("ShowGameOverPanel", 2f);
         }
-        else {
-            Debug.Log("Game Over");
-        }
+    }
+
+    void ShowGameOverPanel() {
+        gameOverPanel.SetActive(true);
     }
 }
